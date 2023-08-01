@@ -2,6 +2,7 @@ package com.example.wantedpreonboardingbackend.service;
 
 import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.exception.GlobalException;
+import com.example.wantedpreonboardingbackend.model.dto.UserDto;
 import com.example.wantedpreonboardingbackend.model.entity.User;
 import com.example.wantedpreonboardingbackend.model.form.UserForm;
 import com.example.wantedpreonboardingbackend.model.repository.UserRepository;
@@ -9,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
 /*
 이메일과 비밀번호로 회원가입할 수 있는 엔드포인트를 구현해 주세요.
 이메일과 비밀번호에 대한 유효성 검사를 구현해 주세요.
@@ -41,4 +45,5 @@ public class UserService {
 
         return validPassword;
     }
+
 }
