@@ -1,6 +1,8 @@
 package com.example.wantedpreonboardingbackend.controller;
 
+import com.example.wantedpreonboardingbackend.component.AuthTokens;
 import com.example.wantedpreonboardingbackend.model.entity.User;
+import com.example.wantedpreonboardingbackend.model.form.LoginForm;
 import com.example.wantedpreonboardingbackend.model.form.UserForm;
 import com.example.wantedpreonboardingbackend.model.repository.UserRepository;
 import com.example.wantedpreonboardingbackend.service.UserService;
@@ -80,5 +82,89 @@ class UserControllerTest {
         user.setPassword(userPassword);
         userRepository.save(user);
         //then
+    }
+    @Test
+    @Transactional
+    void 로그인_성공() throws Exception {
+        //given
+        UserForm userForm = baseData("test@test.com","password1");
+        User user = userForm.toEntity();
+
+        //when
+        String userPassword = userService.ValidPassword(user.getPassword());
+        user.setPassword(userPassword);
+        userRepository.save(user);
+        //when
+        LoginForm loginForm = LoginForm.builder()
+                .loginEmail(user.getEmail())
+                .password("password1")
+                .build();
+       AuthTokens result =  userService.userSignIn(loginForm);
+
+        //then
+        assertNotNull(result);
+    }
+    @Test
+    @Transactional
+    void 로그인_이메일_실패() throws Exception {
+        //given
+        UserForm userForm = baseData("test@test.com","password1");
+        User user = userForm.toEntity();
+
+        //when
+        String userPassword = userService.ValidPassword(user.getPassword());
+        user.setPassword(userPassword);
+        userRepository.save(user);
+        //when
+        LoginForm loginForm = LoginForm.builder()
+                .loginEmail("testtest.com")
+                .password("password1")
+                .build();
+        AuthTokens result =  userService.userSignIn(loginForm);
+        //then
+        boolean containsAts = loginForm.getLoginEmail().contains("@");
+        assertTrue(containsAts);
+        // 이메일 형식 || 이메일이 존재하지 않습니다.
+        assertNotNull(result);
+    }
+    @Test
+    @Transactional
+    void 로그인_PW_불일치() throws Exception {
+        //given
+        UserForm userForm = baseData("test@test.com","123456789");
+        User user = userForm.toEntity();
+
+        //when
+        String userPassword = userService.ValidPassword(user.getPassword());
+        user.setPassword(userPassword);
+        userRepository.save(user);
+        //when
+        LoginForm loginForm = LoginForm.builder()
+                .loginEmail(user.getEmail())
+                .password("password1")
+                .build();
+
+        //then
+        assertTrue(passwordEncoder.matches(loginForm.getPassword(),user.getPassword()));
+    }
+    @Test
+    @Transactional
+    void 로그인_PW_길이실패() throws Exception {
+        //given
+        UserForm userForm = baseData("test@test.com","123456789");
+        User user = userForm.toEntity();
+
+        //when
+        String userPassword = userService.ValidPassword(user.getPassword());
+        user.setPassword(userPassword);
+        userRepository.save(user);
+        //when
+        LoginForm loginForm = LoginForm.builder()
+                .loginEmail(user.getEmail())
+                .password("1234")
+                .build();
+        AuthTokens result =  userService.userSignIn(loginForm);
+        //then
+        assertNotNull(result);
     }
 }
