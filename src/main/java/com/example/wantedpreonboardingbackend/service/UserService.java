@@ -1,9 +1,11 @@
 package com.example.wantedpreonboardingbackend.service;
 
+import com.example.wantedpreonboardingbackend.component.jwt.AuthTokensGenerator;
 import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.exception.GlobalException;
-import com.example.wantedpreonboardingbackend.model.dto.UserDto;
+import com.example.wantedpreonboardingbackend.component.AuthTokens;
 import com.example.wantedpreonboardingbackend.model.entity.User;
+import com.example.wantedpreonboardingbackend.model.form.LoginForm;
 import com.example.wantedpreonboardingbackend.model.form.UserForm;
 import com.example.wantedpreonboardingbackend.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.Locale;
 
 /*
 이메일과 비밀번호로 회원가입할 수 있는 엔드포인트를 구현해 주세요.
@@ -27,8 +29,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthTokensGenerator authTokensGenerator;
     @Transactional
-    public String UserSignup(UserForm userForm) {
+    public String userSignup(UserForm userForm) {
+
+        if(isEmailExist(userForm.getEmail())){
+            throw new GlobalException(ErrorCode.ALREADY_USER_EMAIL);
+        }
+
         User user = userForm.toEntity();
         String userPassword = ValidPassword(user.getPassword());
 
@@ -36,6 +44,9 @@ public class UserService {
         userRepository.save(user);
 
         return "회원 가입 성공 하였습니다.";
+    }
+    public boolean isEmailExist(String email){
+        return userRepository.findByEmail(email.toLowerCase(Locale.ROOT)).isPresent();
     }
     public String ValidPassword(String password){
         if(password.length() < 8){
@@ -46,4 +57,17 @@ public class UserService {
         return validPassword;
     }
 
+    @Transactional
+    public AuthTokens userSignIn(LoginForm loginForm) {
+        User user = userRepository.findByEmail(loginForm.getLoginEmail())
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_USER_EMAIL));
+
+        if(loginForm.getPassword().length() < 8){
+            throw new GlobalException(ErrorCode.WRONG_PASSWORD_INFO);
+        }
+        if(!passwordEncoder.matches(loginForm.getPassword(),user.getPassword())){
+            throw new GlobalException(ErrorCode.WRONG_PASSWORD_LOGIN);
+        }
+    return authTokensGenerator.generate(user.getUserId());
+    }
 }
