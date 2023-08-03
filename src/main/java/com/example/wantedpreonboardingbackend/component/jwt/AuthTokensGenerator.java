@@ -36,5 +36,9 @@ public class AuthTokensGenerator {
         return AuthTokens.of(
                 jwtAccessToken, refreshToken, BEARER_TYPE, ACCESS_TOKEN_EXPIRE_TIME / 1000L);
     }
+    public Long extractUserId(String jwt) {
+
+        return Long.valueOf(jwtTokenProvider.extractSubject(jwt));
+    }
 
 }

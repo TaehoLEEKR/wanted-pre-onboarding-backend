@@ -1,8 +1,11 @@
 package com.example.wantedpreonboardingbackend.service;
 
+import com.example.wantedpreonboardingbackend.component.jwt.CurrentUser;
 import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.exception.GlobalException;
 import com.example.wantedpreonboardingbackend.model.dto.CommunityListDto;
+import com.example.wantedpreonboardingbackend.model.dto.CommunityReadDto;
+import com.example.wantedpreonboardingbackend.model.dto.CommunityUpdateForm;
 import com.example.wantedpreonboardingbackend.model.entity.Community;
 import com.example.wantedpreonboardingbackend.model.entity.User;
 import com.example.wantedpreonboardingbackend.model.form.CommunityCreateForm;
@@ -40,4 +43,29 @@ public class CommunityService {
 
         return CommunityListDto.from(communities);
     }
+
+    @Transactional(readOnly=true)
+    public CommunityReadDto getOne(Long communityId) {
+        Community community = communityRepository.findByCommunityId(communityId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID));
+
+        CommunityReadDto communityReadDto = CommunityReadDto.from(community);
+
+        return communityReadDto;
+    }
+
+    @Transactional
+    public void updateCommunity(Long userId, Long communityId , CommunityUpdateForm communityUpdateForm) {
+        Community community = communityRepository.findByCommunityIdAndUser_UserId(communityId,userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID));
+        community.update(communityUpdateForm.getContent(), community.getCommunityName());
+    }
+    @Transactional
+    public void deleteCommunity(Long userId, Long communityId )
+    {
+        Community community = communityRepository.findByCommunityIdAndUser_UserId(communityId,userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID));
+        communityRepository.delete(community);
+    }
+
 }
