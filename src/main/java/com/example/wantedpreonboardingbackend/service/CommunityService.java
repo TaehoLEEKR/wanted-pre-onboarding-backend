@@ -2,12 +2,15 @@ package com.example.wantedpreonboardingbackend.service;
 
 import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.exception.GlobalException;
+import com.example.wantedpreonboardingbackend.model.dto.CommunityListDto;
 import com.example.wantedpreonboardingbackend.model.entity.Community;
 import com.example.wantedpreonboardingbackend.model.entity.User;
 import com.example.wantedpreonboardingbackend.model.form.CommunityCreateForm;
 import com.example.wantedpreonboardingbackend.model.repository.CommunityRepository;
 import com.example.wantedpreonboardingbackend.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,5 +32,12 @@ public class CommunityService {
         community.setUser(user);
 
         communityRepository.save(community);
+    }
+
+    @Transactional(readOnly = true)
+    public CommunityListDto searchList(Pageable pageable) {
+        Page<Community> communities = communityRepository.findAll(pageable);
+
+        return CommunityListDto.from(communities);
     }
 }
