@@ -4,6 +4,7 @@ import com.example.wantedpreonboardingbackend.component.jwt.AuthTokensGenerator;
 import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.exception.GlobalException;
 import com.example.wantedpreonboardingbackend.component.AuthTokens;
+import com.example.wantedpreonboardingbackend.model.dto.UserDto;
 import com.example.wantedpreonboardingbackend.model.entity.User;
 import com.example.wantedpreonboardingbackend.model.form.LoginForm;
 import com.example.wantedpreonboardingbackend.model.form.UserForm;
@@ -69,5 +70,10 @@ public class UserService {
             throw new GlobalException(ErrorCode.WRONG_PASSWORD_LOGIN);
         }
     return authTokensGenerator.generate(user.getUserId());
+    }
+
+    public UserDto getUserJwtInfo(Long userId) {
+        User user = userRepository.findByUserId(userId).get();
+        return UserDto.from(user);
     }
 }
