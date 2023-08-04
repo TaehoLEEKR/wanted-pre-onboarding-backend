@@ -57,7 +57,7 @@ public class CommunityService {
     @Transactional
     public void updateCommunity(Long userId, Long communityId , CommunityUpdateForm communityUpdateForm) {
         Community community = communityRepository.findByCommunityIdAndUser_UserId(communityId,userId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID));
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_UPDATE));
         //community.update(communityUpdateForm.getContent(), community.getCommunityName());
         community.setContent(communityUpdateForm.getContent());
         community.setCommunityName(communityUpdateForm.getCommunityName());
