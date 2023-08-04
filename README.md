@@ -30,7 +30,12 @@
    - ## Community ERD
    - ![image](https://github.com/TaehoLEEKR/wanted-pre-onboarding-backend/assets/80689135/e651695e-5bc7-4f5b-aa2f-64276426d047)
 
+
+
 - ## 구현한 API동작을 촬영한 데모 영상 링크
+   - ### [데모 영상 Swagger TEST](https://www.youtube.com/watch?v=IVEfx8pB2Bo)
+
+
 - ## 구현 방법 및 이유에 대한 간략한 설명
   - ### 과제 1. 사용자 회원가입 엔드포인트 ([POST]/api/users/sign-up)
     - #### 이메일 조건 : 회원가입과 로그인 에 사용되는 userForm, LoginForm 에 @Email 어노테이션으로 @포함을 추가 하고 Controller 에서 @Valid 어노테이션을 사용하여 유효성 검사를 진행
@@ -55,6 +60,85 @@
    
   - ##### @LoginUser -> 파라미터로 전달받아 현재 누가 로그인 하였는지 구분하기 위해 @interface 로 구현하여 사용함
   - ##### CurrentUser -> @LoginUser 어노테이션을 전달 받을 DTO UserId를 알기 위해 구현
+ 
+    
 - ## API 명세(request/response 포함)
-
-  
+  - ### user-controller
+    - ####  ([POST] /api/users/sign-up )
+      - request Body(JSON)
+        - {
+            "username" : "사용자이름",
+            "email" : "이메일 주소",
+            "password" : "비밀번호",
+            "phone" : "전화번호"
+          }
+      - response 200 : 회원 가입 성공 하였습니다.
+      - response 400 : {"message": "@ 이메일 형식에 맞지 않습니다","errorCode": "USERFORM_EMAIL"}
+      - {"message": "이미 존재하는 이메일입니다.","errorCode": "ALREADY_USER_EMAIL"}
+      - {"message": "이미 존재하는 이메일입니다.","errorCode": "ALREADY_USER_EMAIL"}
+    - #### ([POST] /api/users/sign-in )
+       - request Body(JSON)
+          - {
+            "email" : "이메일 주소",
+            "password" : "비밀번호",
+          }
+      - response 200 : {
+                        "jwtAccessToken : "JWTTOKEN",
+                        "refreschToken : "리프레쉬토큰",
+                        "grantType" : "타입",
+                        "expiresln" : "만료시간"
+                      }
+      - response 400 : { "message": "패스워드 길이를 8자 이상 작성해 주세요", "errorCode": "WRONG_PASSWORD_INFO"}
+      - {"message": "잘못 된 패스워드 입니다.","errorCode": "WRONG_PASSWORD_LOGIN"}
+      - {"message": "@ 이메일 형식에 맞춰주세요.", "errorCode": "LOGINFORM_EMAIL"}
+   
+      - #### ([GET] /api/users/{jwtToken} )
+        - request Path (String)
+        - response 200 : {"userId": userId,"email": "이메일","password": "암호화된 비밀번호","userName": "사용자 이름","phone": "전화번호"}
+     
+  - ### community-controller
+      - #### ([GET] /api/community/list)
+        - request Parm(String) sort
+        - request Parm(Integer) page
+        - request Parm(Integer) size
+        - response 200 : 
+{
+  "communities": [
+    {
+      "communityId": 0,
+      "communityName": "string",
+      "createdDate": "2023-08-04T13:08:00.344Z",
+      "userId": 0
+    }
+  ],
+  "totalPages": 0
+}
+      - #### ([GET] /api/community/{communityId})
+        - request Path(Long)
+        - response 200 :{"communityName": "게시판이름","content": "게시판내용","userName": "사용자이름","createDate": "등록날짜"}
+        - response 400 : {"message": "게시판이 존재하지 않습니다.","errorCode": "NOT_FIND_COMMUNITY_ID"}
+      - #### ([POST] /api/community/create)
+        - request Parm(Long)
+        - request Body(JSON)
+          {
+  "communityName": "게시글 이름",
+  "content": "게시글 내용"
+}
+        - response 200 : **처리메세지 없음**
+        - response 400 :{
+  "message": "존재 하지 않는 유저 입니다.",
+  "errorCode": "NOT_FIND_USER_ID"
+}
+      - #### ([DELETE] /api/community/{communityId})
+        - request Path (Long) (communityId)
+        - request Parm (Long) (userId)
+        - response 200 :
+        - response 400 :{"message": "게시판을 삭제 할 수 없습니다.","errorCode": "NOT_FIND_COMMUNITY_DELETE"}
+      - #### ([PUT] /api/community/{communityId})
+        - request Path (Long) (communityId)
+        - request Parm (Long) (userId)
+        - request Body (JSON)
+         -{"communityName": "string","content": "string"}
+        - response 200 : **처리메세지 없음**
+        - response 400 :{"message": "게시판을 수정 할 수 없습니다.","errorCode": "NOT_FIND_COMMUNITY_UPDATE"}
+        
