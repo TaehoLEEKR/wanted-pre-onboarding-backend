@@ -28,8 +28,9 @@
 
 - ## 데이터베이스 테이블 구조
    - ## Community ERD
-   - ![image](https://github.com/TaehoLEEKR/wanted-pre-onboarding-backend/assets/80689135/e651695e-5bc7-4f5b-aa2f-64276426d047)
-
+     ![image](https://github.com/TaehoLEEKR/wanted-pre-onboarding-backend/assets/80689135/e651695e-5bc7-4f5b-aa2f-64276426d047)
+       - 게시판 - 사용자 N-1 관계
+       - 한명의 사용자가 필수적으로 존재하며 사용자는 여러개의 게시판을 만들수 있다.
 
 
 - ## 구현한 API동작을 촬영한 데모 영상 링크
