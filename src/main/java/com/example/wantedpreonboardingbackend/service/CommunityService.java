@@ -58,7 +58,10 @@ public class CommunityService {
     public void updateCommunity(Long userId, Long communityId , CommunityUpdateForm communityUpdateForm) {
         Community community = communityRepository.findByCommunityIdAndUser_UserId(communityId,userId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID));
-        community.update(communityUpdateForm.getContent(), community.getCommunityName());
+        //community.update(communityUpdateForm.getContent(), community.getCommunityName());
+        community.setContent(communityUpdateForm.getContent());
+        community.setCommunityName(communityUpdateForm.getCommunityName());
+        communityRepository.save(community);
     }
     @Transactional
     public void deleteCommunity(Long userId, Long communityId )

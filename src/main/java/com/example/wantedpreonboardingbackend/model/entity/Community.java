@@ -29,8 +29,8 @@ public class Community extends BaseTimeEntity{
     @JoinColumn(name = "userId")
     private User user;
 
-    public void update(String content, String communityName) {
-        this.communityName = communityName;
-        this.content = content;
-    }
+//    public void update(String content, String communityName) {
+//        this.content = content;
+//        this.communityName = communityName;
+//    }
 }
