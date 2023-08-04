@@ -93,9 +93,9 @@
       - {"message": "잘못 된 패스워드 입니다.","errorCode": "WRONG_PASSWORD_LOGIN"}
       - {"message": "@ 이메일 형식에 맞춰주세요.", "errorCode": "LOGINFORM_EMAIL"}
    
-      - #### ([GET] /api/users/{jwtToken} )
-        - request Path (String)
-        - response 200 : {"userId": userId,"email": "이메일","password": "암호화된 비밀번호","userName": "사용자 이름","phone": "전화번호"}
+    - #### ([GET] /api/users/{jwtToken} )
+      - request Path (String)
+      - response 200 : {"userId": userId,"email": "이메일","password": "암호화된 비밀번호","userName": "사용자 이름","phone": "전화번호"}
      
   - ### community-controller
       - #### ([GET] /api/community/list)
