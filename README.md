@@ -133,7 +133,7 @@
       - #### ([DELETE] /api/community/{communityId})
         - request Path (Long) (communityId)
         - request Parm (Long) (userId)
-        - response 200 :
+        - response 200 : **처리메세지 없음**
         - response 400 :{"message": "게시판을 삭제 할 수 없습니다.","errorCode": "NOT_FIND_COMMUNITY_DELETE"}
       - #### ([PUT] /api/community/{communityId})
         - request Path (Long) (communityId)
