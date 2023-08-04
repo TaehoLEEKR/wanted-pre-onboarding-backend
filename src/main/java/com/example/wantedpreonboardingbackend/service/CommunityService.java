@@ -67,7 +67,7 @@ public class CommunityService {
     public void deleteCommunity(Long userId, Long communityId )
     {
         Community community = communityRepository.findByCommunityIdAndUser_UserId(communityId,userId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID));
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FIND_COMMUNITY_ID_DELETE));
         communityRepository.delete(community);
     }
 
